@@ -1,4 +1,16 @@
 # 🔐 Microservices Security – EazyBank 
+![Java](https://img.shields.io/badge/Java-17+-red?logo=java)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen?logo=springboot)
+![Spring Security](https://img.shields.io/badge/Spring%20Security-OAuth2-success?logo=springsecurity)
+![OAuth2](https://img.shields.io/badge/OAuth2-Authorization-blue)
+![OpenID Connect](https://img.shields.io/badge/OpenID%20Connect-OIDC-blueviolet)
+![Keycloak](https://img.shields.io/badge/Keycloak-IAM-black?logo=keycloak)
+![JWT](https://img.shields.io/badge/JWT-Authentication-orange?logo=jsonwebtokens)
+![API Gateway](https://img.shields.io/badge/Spring%20Cloud%20Gateway-API%20Gateway-green)
+![Docker](https://img.shields.io/badge/Docker-Containerization-blue?logo=docker)
+![Postman](https://img.shields.io/badge/Postman-API%20Testing-orange?logo=postman)
+![Microservices](https://img.shields.io/badge/Microservices-Architecture-lightgrey)
+![Security](https://img.shields.io/badge/Security-Production--Grade-darkred)
 
 This section is an **advancement of the Observability & Monitoring module**, where we introduce **security into EazyBank microservices** using **OAuth 2.0, OpenID Connect, Spring Security, and Keycloak**.
 
@@ -634,4 +646,28 @@ POST request to secured API succeeded using the access token.
 
 🚀 **This completes the Authorization Code Grant implementation in EazyBank**
 
+---
+
+## 📚 What I Learned in This Repository
+
+- 🔐 Implementing **production-grade security** in microservices
+- 🧠 Understanding **OAuth 2.0** fundamentals and real-world usage
+- 🆔 Differentiating **OAuth 2.0 vs OpenID Connect**
+- 🎟️ Working with **JWT access tokens** and public/private key validation
+- 🛡️ Using **Keycloak** as a centralized Identity & Access Management (IAM) server
+- 🔁 Implementing **Client Credentials Grant** for service-to-service authentication
+- 👤 Implementing **Authorization Code Grant** for user-based authentication
+- 🌐 Securing **Spring Cloud API Gateway** as an OAuth2 Resource Server
+- 🔑 Fetching and validating **JWK public keys** from Keycloak
+- 🎭 Applying **role-based authorization** at gateway level
+- 🧩 Extracting roles from JWT using a **custom Keycloak role converter**
+- 🚦 Protecting microservice routes using **Spring Security & WebFlux**
+- 📬 Generating and testing tokens using **Postman**
+- 🐳 Running **Keycloak using Docker**
+- 🔍 Integrating security with **observability & monitoring stack**
+- 📊 Correlating **logs, metrics, and traces** with secured APIs
+- 🧱 Designing **secure, scalable, and centralized authentication architecture**
+- 🚀 Building **enterprise-ready microservices security** end to end
+
+✅ **This repository represents a complete, real-world implementation of Microservices Security using OAuth2, OpenID Connect, and Keycloak**
 
