@@ -299,4 +299,146 @@ public class SecurityConfig {
 ```
 
 ---
+## 🔐 Role-Based Authorization in Gateway Server (Keycloak + JWT)
+
+After securing the Gateway Server as an OAuth2 Resource Server, the next step was to **implement authorization using roles** provided by **Keycloak**.
+
+In this setup:
+- Each microservice route is protected by a **specific role**
+- Roles are extracted from the **JWT access token**
+- Authorization is enforced **centrally at the API Gateway**
+
+---
+
+## 🎯 Goal
+
+| Route | Required Role |
+|------|--------------|
+| `/eazybank/accounts/**` | `ACCOUNTS` |
+| `/eazybank/cards/**` | `CARDS` |
+| `/eazybank/loans/**` | `LOANS` |
+
+---
+
+## 🧠 How It Works (High Level)
+
+1. Client sends request with **JWT access token**
+2. Gateway validates token using **Keycloak public keys**
+3. Roles are present inside JWT under `realm_access.roles`
+4. A **custom role converter** extracts roles from JWT
+5. Spring Security maps roles → `ROLE_*`
+6. Gateway authorizes requests based on route + role
+
+---
+
+## 🛡️ Security Configuration (Gateway Server)
+
+This configuration:
+- Enables **WebFlux Security**
+- Secures routes using `hasRole()`
+- Configures Gateway as an **OAuth2 Resource Server**
+- Uses a **custom JWT role extractor**
+
+```java
+@Configuration
+@EnableWebFluxSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity serverHttpSecurity) {
+
+        serverHttpSecurity.authorizeExchange(exchanges -> exchanges
+                        .pathMatchers(HttpMethod.GET).permitAll()
+                        .pathMatchers("/eazybank/accounts/**").hasRole("ACCOUNTS")
+                        .pathMatchers("/eazybank/cards/**").hasRole("CARDS")
+                        .pathMatchers("/eazybank/loans/**").hasRole("LOANS")
+                )
+                .oauth2ResourceServer(oAuth2ResourceServerSpec ->
+                        oAuth2ResourceServerSpec.jwt(jwtSpec ->
+                                jwtSpec.jwtAuthenticationConverter(grantedAuthoritiesExtractor())
+                        )
+                );
+
+        serverHttpSecurity.csrf(csrfSpec -> csrfSpec.disable());
+        return serverHttpSecurity.build();
+    }
+
+    private Converter<Jwt, Mono<AbstractAuthenticationToken>> grantedAuthoritiesExtractor() {
+        JwtAuthenticationConverter jwtAuthenticationConverter =
+                new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(
+                new KeycloakRoleConverter()
+        );
+        return new ReactiveJwtAuthenticationConverterAdapter(jwtAuthenticationConverter);
+    }
+}
+```
+---
+## 🔐 Keycloak Security Implementation – Step by Step 
+
+The following screenshots demonstrate the complete flow of implementing **OAuth2 Client Credentials Grant with Keycloak** and securing microservices via the **API Gateway**.
+
+---
+
+### 🖥️ Keycloak Admin Console Access
+Keycloak sign-in page used to access the Admin Console.
+
+![Keycloak Login](key1.png)
+
+---
+
+### 🧩 Creating OAuth2 Client
+Created a new OAuth2 client for service-to-service communication.
+
+- Client ID: `eazybank-callcenter-cc`
+- Client Authentication: Enabled
+
+![Create Client](key2.png)
+
+---
+
+### 🎭 Assigning Roles in Keycloak
+Roles (`ACCOUNTS`, `CARDS`, `LOANS`) assigned to the client for authorization.
+
+![Assign Roles](key3.png)
+
+---
+
+### 🔑 Client Credentials (ID & Secret)
+Copied **Client ID** and **Client Secret** from the Credentials tab.
+
+![Client Credentials](key4.png)
+
+---
+
+### 🚫 API Call Without Access Token
+POST request to Accounts API without token → **Request rejected**.
+
+![Unauthorized Request](key5.png)
+
+---
+
+### 📬 Configuring Postman for Token Generation
+Configured Postman to request access token using **Client Credentials Grant**.
+
+- Grant Type: `client_credentials`
+- Scope: `openid profile email`
+
+![Postman Token Request](key6.png)
+
+---
+
+### ✅ Access Token Generated Successfully
+Keycloak Authorization Server returned a valid **JWT access token**.
+
+![Access Token](key7.png)
+
+---
+
+### 🔓 API Call With Access Token (Success) 
+POST request to secured API with Bearer token → **Request successful**.
+
+![Authorized Request](key8.png)
+
+---
 
