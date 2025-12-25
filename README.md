@@ -441,5 +441,197 @@ POST request to secured API with Bearer token → **Request successful**.
 ![Authorized Request](utils/key8.png)
 
 ---
+## 🔐 Authorization Code Grant – User-Based Authentication
+
+After securing service-to-service communication using **Client Credentials Grant**, the next advancement is implementing **Authorization Code Grant**, which enables **user-based authentication and authorization**.
+
+This flow is used when a **real end user interacts with the system**, such as UI applications (web or mobile).
+
+---
+
+## 🔄 How Authorization Code Grant Works (User ↔ Server Interaction)
+
+The Authorization Code Grant involves **interaction between the User, Client Application, Authorization Server, and Resource Server**.
+
+### 🔁 Step-by-Step Flow
+
+1️⃣ **User accesses the Client Application**  
+The user opens a UI application (e.g., Call Center UI).
+
+2️⃣ **Client redirects user to Authorization Server (Keycloak)**  
+The client redirects the user to Keycloak’s login page for authentication.
+
+3️⃣ **User authenticates with credentials**  
+The user enters username & password on the Keycloak login screen.
+
+4️⃣ **Authorization Code is generated**  
+After successful login, Keycloak generates a **short-lived authorization code**.
+
+5️⃣ **Client exchanges code for Access Token**  
+The client sends the authorization code + client credentials to Keycloak’s token endpoint.
+
+6️⃣ **Keycloak issues tokens**  
+Keycloak returns:
+- Access Token (JWT)
+- (Optional) Refresh Token
+- (Optional) ID Token (OIDC)
+
+7️⃣ **Client accesses protected APIs**  
+The client sends the Access Token to the API Gateway.
+
+8️⃣ **Gateway validates token & roles**  
+Gateway validates JWT and allows access based on user roles.
+
+✅ **Result:** Secure, user-authenticated access to microservices.
+
+---
+
+## 🆚 Client Credentials vs Authorization Code Grant
+
+| Aspect | Client Credentials Grant | Authorization Code Grant |
+|------|--------------------------|--------------------------|
+| User Involvement | ❌ No user | ✅ User involved |
+| Used For | Service-to-service | User-facing applications |
+| Authentication | Client only | User + Client |
+| Token Owner | Application | User |
+| Typical Use Case | Internal APIs, backend jobs | Web apps, UI, dashboards |
+
+---
+
+## 🧩 Registering Client for Authorization Code Grant (Keycloak)
+
+To implement Authorization Code Grant, a **new OAuth2 client** was registered in Keycloak.
+
+### 🖥️ Client Details
+
+- **Client ID:** `eazymarketing-callcenter-ac`
+- **Name:** Eazybank Call Center UI App
+
+### ⚙️ Client Configuration
+
+- Client Authentication: ✅ Enabled
+- Authorization Flow:
+  - ✅ Standard Flow (Authorization Code)
+- Redirect Settings:
+  - Valid Redirect URIs: `*`
+  - Web Origins: `*`
+
+After configuration, the client was **saved successfully**.
+
+---
+
+## 👤 Creating End User in Keycloak
+
+Authorization Code Grant **requires a user**, so an end user was created.
+
+### 🧾 User Creation Steps
+
+1️⃣ Navigate to **Users → Add User**  
+2️⃣ Enter user details (username, email, etc.)  
+3️⃣ Create user  
+4️⃣ Set password  
+5️⃣ Save changes  
+
+The user is now ready to authenticate via Keycloak.
+
+
+---
+## 🔐 Authorization Code Grant – 
+
+The following screenshots demonstrate the **complete end-to-end flow of OAuth2 Authorization Code Grant** using **Keycloak**, **Postman**, and a secured **API Gateway**.
+
+
+### 🧩 Creating OAuth2 Client (Authorization Code Grant)
+A new OAuth2 client was created in Keycloak specifically for **user-based authentication**.
+
+- Client ID: `eazymarketing-callcenter-ac`
+- Standard Flow: Enabled
+- Client Authentication: Enabled
+
+![Create Authorization Code Client](utils/auth1.png)
+
+---
+
+### 👤 Creating New User
+A new end user was created in Keycloak to participate in the Authorization Code Grant flow.
+
+![Create User](utils/auth2.png)
+
+---
+
+### 🎭 Assigning Realm Roles to User
+Realm-level roles (`ACCOUNTS`, `CARDS`, `LOANS`) were assigned to the user for authorization.
+
+![Assign Realm Roles](utils/auth3.png)
+
+---
+
+### 🔑 Setting Password for User
+A password was configured for the newly created user to allow login via Keycloak.
+
+![Set User Password](utils/auth4.png)
+
+---
+
+### 🔐 Copying Client Credentials
+Client ID and Client Secret were copied from the **Credentials** tab of the client.
+
+![Client Credentials](utils/auth5.png)
+
+---
+
+### 📬 Configuring Postman (Authorization Code Grant)
+Postman was configured with:
+- Grant Type: `authorization_code`
+- Client ID & Secret
+- Authorization URL
+- Token URL
+- Redirect URI
+
+![Postman Configuration](utils/auth6.png)
+
+---
+
+### 🔁 Redirect to Keycloak Login Page
+While requesting the access token, Postman redirected to **Keycloak login page**, asking for user credentials.
+
+![Keycloak Login Redirect](utils/auth7.png)
+
+---
+
+### ✅ User Authentication Successful
+User successfully authenticated with username and password in Keycloak.
+
+![User Authentication](utils/auth8.png)
+
+---
+
+### 🪪 Access Token Generated
+Keycloak returned a **JWT access token** after successful authentication and authorization.
+
+![Access Token Generated](utils/auth9.png)
+
+---
+
+### 🔓 API Access with Authorization Code Grant
+POST request to secured API succeeded using the access token.
+
+- HTTP Status: **200 OK**
+- Token validated by API Gateway
+- Authorization enforced using roles
+
+![Authorized API Request](utils/auth10.png)
+
+---
+
+## ✅ Outcome
+
+- OAuth2 Authorization Code Grant successfully implemented
+- User authentication handled by Keycloak
+- JWT access tokens generated and validated
+- Role-based authorization enforced at API Gateway
+- Secure user-to-microservices communication achieved
+
+🚀 **This completes the Authorization Code Grant implementation in EazyBank**
 
 
