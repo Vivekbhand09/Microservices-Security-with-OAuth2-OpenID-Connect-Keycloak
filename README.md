@@ -383,7 +383,7 @@ The following screenshots demonstrate the complete flow of implementing **OAuth2
 ### 🖥️ Keycloak Admin Console Access
 Keycloak sign-in page used to access the Admin Console.
 
-![Keycloak Login](key1.png)
+![Keycloak Login](utils/key1.png)
 
 ---
 
@@ -393,28 +393,28 @@ Created a new OAuth2 client for service-to-service communication.
 - Client ID: `eazybank-callcenter-cc`
 - Client Authentication: Enabled
 
-![Create Client](key2.png)
+![Create Client](utils/key2.png)
 
 ---
 
 ### 🎭 Assigning Roles in Keycloak
 Roles (`ACCOUNTS`, `CARDS`, `LOANS`) assigned to the client for authorization.
 
-![Assign Roles](key3.png)
+![Assign Roles](utils/key3.png)
 
 ---
 
 ### 🔑 Client Credentials (ID & Secret)
 Copied **Client ID** and **Client Secret** from the Credentials tab.
 
-![Client Credentials](key4.png)
+![Client Credentials](utils/key4.png)
 
 ---
 
 ### 🚫 API Call Without Access Token
 POST request to Accounts API without token → **Request rejected**.
 
-![Unauthorized Request](key5.png)
+![Unauthorized Request](utils/key5.png)
 
 ---
 
@@ -424,21 +424,22 @@ Configured Postman to request access token using **Client Credentials Grant**.
 - Grant Type: `client_credentials`
 - Scope: `openid profile email`
 
-![Postman Token Request](key6.png)
+![Postman Token Request](utils/key6.png)
 
 ---
 
 ### ✅ Access Token Generated Successfully
 Keycloak Authorization Server returned a valid **JWT access token**.
 
-![Access Token](key7.png)
+![Access Token](utils/key7.png)
 
 ---
 
 ### 🔓 API Call With Access Token (Success) 
 POST request to secured API with Bearer token → **Request successful**.
 
-![Authorized Request](key8.png)
+![Authorized Request](utils/key8.png)
 
 ---
+
 
