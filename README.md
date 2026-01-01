@@ -14,7 +14,7 @@
 
 This section is an **advancement of the Observability & Monitoring module**, where we introduce **security into EazyBank microservices** using **OAuth 2.0, OpenID Connect, Spring Security, and Keycloak**.
 
-The goal is to ensure:
+The goal is to ensure: 
 - Secure API access
 - Token-based authentication
 - Centralized identity management
